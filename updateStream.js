@@ -57,7 +57,7 @@ async function updateLivestream() {
     <title>Livestream</title>
 </head>
 <body>
-    <iframe id="liveStream" width="560" height="315" 
+    <iframe id="liveStream" width="100%" height="100%" 
         src="https://www.youtube.com/embed/${videoId}"
         frameborder="0" allowfullscreen>
     </iframe>
