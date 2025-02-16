@@ -7,7 +7,7 @@ const HTML_FILE = 'livestream.html';
 
 // Function to execute shell commands and log their output
 function runCommand(command, callback) {
-    exec(command, (error, stdout, stderr) => {
+    exec(command, { cwd: "C:/Users/SPBC Streaming PC/Desktop/Github/liveStream" }, (error, stdout, stderr) => {
         if (error) {
             console.error(`Error: ${error.message}`);
             return;
@@ -67,19 +67,15 @@ async function updateLivestream() {
     fs.writeFileSync(HTML_FILE, htmlContent);
     console.log(`Updated livestream to Video ID: ${videoId}`);
 
-    // Navigate to the repo and push the changes to GitHub
-    runCommand('cd "C:/Users/SPBC Streaming PC/Desktop/Github/liveStream"', () => {
-        runCommand('git status', () => {  // Checking the status before adding
-            runCommand('git add -A', () => {
-                runCommand(`git commit -m "Auto-update: ${new Date().toLocaleString()}"`, () => {
-                    runCommand('git push origin main', (error, stdout, stderr) => {
-                        if (error || stderr) {
-                            console.error('Push failed:', error || stderr);
-                        } else {
-                            console.log('Successfully pushed to GitHub!');
-                        }
-                    });
-                });
+    // Check if there are changes before committing
+    runCommand('git diff --cached --exit-code || git add -A', () => {
+        runCommand(`git commit -m "Auto-update: ${new Date().toLocaleString()}"`, () => {
+            runCommand('git push origin main', (error, stdout, stderr) => {
+                if (error || stderr) {
+                    console.error('Push failed:', error || stderr);
+                } else {
+                    console.log('Successfully pushed to GitHub!');
+                }
             });
         });
     });
