@@ -67,15 +67,20 @@ async function updateLivestream() {
     fs.writeFileSync(HTML_FILE, htmlContent);
     console.log(`Updated livestream to Video ID: ${videoId}`);
 
-    // Check if there are changes before committing
-    runCommand('git diff --cached --exit-code || git add -A', () => {
-        runCommand(`git commit -m "Auto-update: ${new Date().toLocaleString()}"`, () => {
-            runCommand('git push origin main', (error, stdout, stderr) => {
-                if (error || stderr) {
-                    console.error('Push failed:', error || stderr);
-                } else {
-                    console.log('Successfully pushed to GitHub!');
-                }
+    // Log git status to see the state before committing
+    runCommand('git status', () => {
+        runCommand('git diff --cached --exit-code || git add -A', () => {
+            // Log status again before commit to verify if changes are staged
+            runCommand('git status', () => {
+                runCommand(`git commit -m "Auto-update: ${new Date().toLocaleString()}"`, () => {
+                    runCommand('git push origin main', (error, stdout, stderr) => {
+                        if (error || stderr) {
+                            console.error('Push failed:', error || stderr);
+                        } else {
+                            console.log('Successfully pushed to GitHub!');
+                        }
+                    });
+                });
             });
         });
     });
