@@ -8,13 +8,13 @@
         .video-container {
             position: relative;
             width: 100%;
-            max-width: 1000px; /* Set a max width if needed */
+            max-width: 1000px; /* Adjust as needed */
             margin: auto;
         }
         .video-container::before {
             content: "";
             display: block;
-            padding-top: 56.25%; /* 16:9 Aspect Ratio (Height = Width * 9/16) */
+            padding-top: 56.25%; /* Maintains 16:9 aspect ratio */
         }
         .video-container iframe {
             position: absolute;
@@ -26,11 +26,13 @@
     </style>
 </head>
 <body>
+
     <div class="video-container">
-        <iframe 
-            src="https://www.youtube.com/embed/live_stream?channel=@stonypointbaptistchurch1909"
+        <iframe id="liveStream" 
+            src="https://www.youtube.com/embed/Z9QmK0rEU7I"
             frameborder="0" allowfullscreen>
         </iframe>
     </div>
+
 </body>
 </html>
