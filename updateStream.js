@@ -69,7 +69,7 @@ async function updateLivestream() {
 
     // Log git status to see the state before committing
     runCommand('git status', () => {
-        runCommand('git diff --cached --exit-code || git add -A', () => {
+        runCommand('git add --renormalize .', () => {
             // Log status again before commit to verify if changes are staged
             runCommand('git status', () => {
                 runCommand(`git commit -m "Auto-update: ${new Date().toLocaleString()}"`, () => {
