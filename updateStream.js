@@ -70,7 +70,7 @@ async function updateLivestream() {
     // Navigate to the repo and push the changes to GitHub
     runCommand('cd "C:/Users/SPBC Streaming PC/Desktop/Github/liveStream"', () => {
         runCommand('git status', () => {  // Checking the status before adding
-            runCommand('git add .', () => {
+            runCommand('git add livestream.html', () => {
                 runCommand(`git commit -m "Auto-update: ${new Date().toLocaleString()}"`, () => {
                     runCommand('git push origin main', (error, stdout, stderr) => {
                         if (error || stderr) {
