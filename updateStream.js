@@ -40,23 +40,24 @@ async function getLiveStreamID() {
         logMessage('Opening YouTube Live page...');
         await page.goto(CHANNEL_URL, { waitUntil: 'load', timeout: 30000 });
 
-        // Wait for the video element to load
-        logMessage('Waiting for the canonical link...');
-        await page.waitForSelector('link[rel="canonical"]', { timeout: 10000 });
+        // Wait for the video element or a better selector
+        logMessage('Waiting for the iframe or video elements...');
+        await page.waitForSelector('iframe[src^="https://www.youtube.com/embed/"]', { timeout: 10000 });
 
-        // Get the video URL from the canonical link
-        const videoUrl = await page.$eval('link[rel="canonical"]', el => el.href);
-        logMessage(`Video URL: ${videoUrl}`);
+        // Extract the iframe source (video URL)
+        const iframeSrc = await page.$eval('iframe[src^="https://www.youtube.com/embed/"]', el => el.src);
+        logMessage(`Video URL: ${iframeSrc}`);
 
         await browser.close();
 
-        // Extract Video ID
-        const videoIdMatch = videoUrl.match(/watch\?v=([\w-]+)/);
+        // Extract Video ID from iframe URL
+        const videoIdMatch = iframeSrc.match(/embed\/([\w-]+)/);
         return videoIdMatch ? videoIdMatch[1] : null;
     } catch (error) {
         logMessage(`Error in getLiveStreamID: ${error.message}`);
     }
 }
+
 
 async function updateLivestream() {
     logMessage('Fetching latest livestream...');
