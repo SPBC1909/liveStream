@@ -20,4 +20,4 @@ jobs:
           node-version: 20
 
       - name: Run script
-        run: node updateStream.js
+        run: node liveStream/updateStream.js
