@@ -152,3 +152,25 @@ Changes not staged for commit:
 [2/23/2025, 12:46:09 PM] - Stderr: To github.com:SPBC1909/liveStream.git
    da191ab..d253ae1  main -> main
 
+[2/23/2025, 1:29:32 PM] - Starting script...
+[2/23/2025, 1:29:32 PM] - Fetching latest livestream...
+[2/23/2025, 1:29:32 PM] - Launching Puppeteer...
+[2/23/2025, 1:29:32 PM] - Opening YouTube Live page...
+[2/23/2025, 1:29:34 PM] - Waiting for the canonical link...
+[2/23/2025, 1:29:35 PM] - Video URL: https://www.youtube.com/watch?v=heQQz2A0tOg
+[2/23/2025, 1:29:35 PM] - Latest livestream ID: heQQz2A0tOg
+[2/23/2025, 1:29:35 PM] - Writing HTML content to livestream.html
+[2/23/2025, 1:29:35 PM] - Updated livestream to Video ID: heQQz2A0tOg
+[2/23/2025, 1:29:35 PM] - Running command: git status
+[2/23/2025, 1:29:35 PM] - Command Output: On branch main
+Your branch is up to date with 'origin/main'.
+
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+	modified:   livestream.html
+	modified:   livestream_log.txt
+
+no changes added to commit (use "git add" and/or "git commit -a")
+
+[2/23/2025, 1:29:35 PM] - Running command: git add --renormalize .
