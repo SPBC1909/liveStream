@@ -67,56 +67,76 @@ async function updateLivestream() {
 
     logMessage(`Latest livestream ID: ${videoId}`);
 
-    let htmlContent = `<!DOCTYPE html>
+  let htmlContent = `<!DOCTYPE html>
 <html>
 <head>
     <title>Livestream</title>
     <style>
-        /* Make iframe responsive */
+        /* Make the iframe container responsive and center it */
         body, html {
             height: 100%;
             margin: 0;
             padding: 0;
-            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #000; /* Optional, for better contrast */
         }
 
+        /* Container for iframe to maintain aspect ratio */
+        .iframe-container {
+            position: relative;
+            width: 80%;
+            max-width: 100%; /* Prevents it from overflowing the screen */
+            height: 0;
+            padding-bottom: 56.25%; /* 16:9 aspect ratio */
+            overflow: hidden;
+            background-color: #000; /* Optional */
+        }
+
+        /* Full-size iframe */
         #liveStream {
+            position: absolute;
+            top: 0;
+            left: 0;
             width: 100%;
             height: 100%;
-            max-width: 100%;
-            max-height: 100%;
+            border: none;
         }
 
         /* Adjust iframe size based on screen width */
         @media (max-width: 768px) {
-            #liveStream {
+            .iframe-container {
                 width: 100%;
-                height: 50%;
+                padding-bottom: 56.25%; /* Keep aspect ratio */
             }
         }
 
         @media (min-width: 769px) and (max-width: 1200px) {
-            #liveStream {
+            .iframe-container {
                 width: 80%;
-                height: 80%;
+                padding-bottom: 56.25%; /* Keep aspect ratio */
             }
         }
 
         @media (min-width: 1201px) {
-            #liveStream {
+            .iframe-container {
                 width: 100%;
-                height: 100%;
+                padding-bottom: 56.25%; /* Keep aspect ratio */
             }
         }
     </style>
 </head>
 <body>
-    <iframe id="liveStream" 
-        src="https://www.youtube.com/embed/${videoId}"
-        frameborder="0" allowfullscreen>
-    </iframe>
+    <div class="iframe-container">
+        <iframe id="liveStream" 
+            src="https://www.youtube.com/embed/${videoId}"
+            frameborder="0" allowfullscreen>
+        </iframe>
+    </div>
 </body>
 </html>`;
+
 
     try {
         logMessage(`Writing HTML content to ${HTML_FILE}`);
