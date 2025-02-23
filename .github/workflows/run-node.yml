@@ -2,8 +2,8 @@ name: Run Node.js Every Sunday (EST)
 
 on:
   schedule:
-    - cron: '30 15 * * 0'  # 10:30 AM EST / 11:30 AM EDT
-
+ - cron: '40 16 * * 0'  # 11:40 AM EST / 12:40 PM EDT (16:40 UTC)
+ 
 jobs:
   run-node:
     runs-on: ubuntu-latest
