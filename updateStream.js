@@ -38,11 +38,19 @@ async function getLiveStreamID() {
         const page = await browser.newPage();
 
         logMessage('Opening YouTube Live page...');
-        await page.goto(CHANNEL_URL, { waitUntil: 'load', timeout: 30000 });
+        await page.goto(CHANNEL_URL, { waitUntil: 'domcontentloaded', timeout: 60000 });
 
-        // Wait for the video element or a better selector
+        // Wait for the play button to appear
+        logMessage('Waiting for play button...');
+        await page.waitForSelector('button.ytp-play-button', { timeout: 30000 });
+
+        // Click the play button to start the livestream
+        logMessage('Clicking play button...');
+        await page.click('button.ytp-play-button');
+
+        // Wait for the iframe to load the actual video URL
         logMessage('Waiting for the iframe or video elements...');
-        await page.waitForSelector('iframe[src^="https://www.youtube.com/embed/"]', { timeout: 10000 });
+        await page.waitForSelector('iframe[src^="https://www.youtube.com/embed/"]', { timeout: 30000 });
 
         // Extract the iframe source (video URL)
         const iframeSrc = await page.$eval('iframe[src^="https://www.youtube.com/embed/"]', el => el.src);
@@ -57,6 +65,7 @@ async function getLiveStreamID() {
         logMessage(`Error in getLiveStreamID: ${error.message}`);
     }
 }
+
 
 
 async function updateLivestream() {
