@@ -71,58 +71,45 @@ async function updateLivestream() {
 <html>
 <head>
     <title>Livestream</title>
-    <style>
-        /* Make the iframe container responsive and center it */
+   <style>
+        /* Make iframe responsive */
         body, html {
             height: 100%;
             margin: 0;
             padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background-color: #000; /* Optional, for better contrast */
-        }
-
-        /* Container for iframe to maintain aspect ratio */
-        .iframe-container {
-            position: relative;
-            width: 80%;
-            max-width: 100%; /* Prevents it from overflowing the screen */
-            height: 0;
-            padding-bottom: 56.25%; /* 16:9 aspect ratio */
             overflow: hidden;
-            background-color: #000; /* Optional */
         }
 
-        /* Full-size iframe */
         #liveStream {
-            position: absolute;
-            top: 0;
-            left: 0;
             width: 100%;
             height: 100%;
-            border: none;
-        }
+            max-width: 100%;
+            max-height: 100%;
+              display: block;
+              margin-left: auto;
+              margin-right: auto;
+              width: 50%;
+                    }
 
         /* Adjust iframe size based on screen width */
         @media (max-width: 768px) {
-            .iframe-container {
+            #liveStream {
                 width: 100%;
-                padding-bottom: 56.25%; /* Keep aspect ratio */
+                height: 50%;
             }
         }
 
         @media (min-width: 769px) and (max-width: 1200px) {
-            .iframe-container {
+            #liveStream {
                 width: 80%;
-                padding-bottom: 56.25%; /* Keep aspect ratio */
+                height: 80%;
             }
         }
 
         @media (min-width: 1201px) {
-            .iframe-container {
+            #liveStream {
                 width: 100%;
-                padding-bottom: 56.25%; /* Keep aspect ratio */
+                height: 100%;
             }
         }
     </style>
