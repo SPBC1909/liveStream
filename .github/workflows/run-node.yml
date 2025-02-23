@@ -29,5 +29,8 @@ jobs:
           sudo dpkg -i google-chrome-stable_current_amd64.deb
           sudo apt --fix-broken install -y
 
+      - name: Set PUPPETEER_EXECUTABLE_PATH
+        run: echo "PUPPETEER_EXECUTABLE_PATH=$(which google-chrome-stable)" >> $GITHUB_ENV
+
       - name: Run script
         run: node ./updateStream.js
