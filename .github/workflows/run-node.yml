@@ -3,7 +3,7 @@ name: Run Node.js Every Sunday (EST)
 on:
   workflow_dispatch:  # Allows manual trigger
   schedule:
-    - cron: '40 16 * * 0'  # 11:40 AM EST
+    - cron: '40 16 * * 0'  # 11:40 AM EST (which is 4:40 PM UTC)
 
 jobs:
   run-node:
@@ -28,6 +28,8 @@ jobs:
           curl -sS https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb -o google-chrome-stable_current_amd64.deb
           sudo dpkg -i google-chrome-stable_current_amd64.deb
           sudo apt --fix-broken install -y
+          # Install additional dependencies for Puppeteer and Chromium
+          sudo apt-get install -y libxss1 libappindicator3-1 libgdk-pixbuf2.0-0 libatk-bridge2.0-0 libatk1.0-0 libcups2 libgbm1 libnspr4 libnss3 libxcomposite1 libxrandr2 libgtk-3-0
 
       - name: Set PUPPETEER_EXECUTABLE_PATH
         run: echo "PUPPETEER_EXECUTABLE_PATH=$(which google-chrome-stable)" >> $GITHUB_ENV
