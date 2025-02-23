@@ -1,0 +1,21 @@
+name: Run Node.js Every Sunday (EST)
+
+on:
+  schedule:
+    - cron: '30 15 * * 0'  # 10:30 AM EST / 11:30 AM EDT
+
+jobs:
+  run-node:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Run script
+        run: node your-script.js
