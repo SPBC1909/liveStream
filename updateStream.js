@@ -17,7 +17,7 @@ function logMessage(message) {
 // Function to execute shell commands and log their output
 function runCommand(command, callback) {
     logMessage(`Running command: ${command}`);
-    exec(command, { cwd: "C:/Users/SPBC Streaming PC/Desktop/Github/liveStream" }, (error, stdout, stderr) => {
+    exec(command, { cwd: process.cwd() }, (error, stdout, stderr) => {
         if (error) {
             logMessage(`Error: ${error.message}`);
             return;
