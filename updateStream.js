@@ -71,7 +71,7 @@ async function updateLivestream() {
 <html>
 <head>
     <title>Livestream</title>
-   <style>
+<style>
         /* Make iframe responsive */
         body, html {
             height: 100%;
