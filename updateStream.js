@@ -17,19 +17,18 @@ function logMessage(message) {
 // Function to execute shell commands and log their output
 function runCommand(command, callback) {
     logMessage(`Running command: ${command}`);
-    exec(command, { cwd: "C:/Users/SPBC Streaming PC/Desktop/Github/liveStream" }, (error, stdout, stderr) => {
-        if (error) {
-            logMessage(`Error: ${error.message}`);
-            return;
-        }
-        if (stderr) {
-            logMessage(`Stderr: ${stderr}`);
-            return;
-        }
-        logMessage(`Command Output: ${stdout}`);
-        if (callback) callback();
-    });
-}
+    exec(command, { cwd: "C:/Users/SPBC Streaming PC/Desktop/Github/liveStream", shell: true }, (error, stdout, stderr) => {
+    if (error) {
+        logMessage(`Error: ${error.message}`);
+        return;
+    }
+    if (stderr) {
+        logMessage(`Stderr: ${stderr}`);
+    }
+    logMessage(`Command Output: ${stdout}`);
+    if (callback) callback();
+});
+
 
 async function getLiveStreamID() {
     try {
