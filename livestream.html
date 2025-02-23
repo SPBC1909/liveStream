@@ -3,7 +3,7 @@
 <head>
     <title>Livestream</title>
     <style>
-        /* Make the iframe container responsive and center it */
+        /* Make the body and html take full height */
         body, html {
             height: 100%;
             margin: 0;
@@ -14,18 +14,17 @@
             background-color: #000; /* Optional, for better contrast */
         }
 
-        /* Container for iframe to maintain aspect ratio */
+        /* Container for iframe with correct aspect ratio */
         .iframe-container {
             position: relative;
-            width: 80%;
-            max-width: 100%; /* Prevents it from overflowing the screen */
+            width: 100%;
+            max-width: 100%; /* Prevents it from overflowing */
             height: 0;
-            padding-bottom: 56.25%; /* 16:9 aspect ratio */
+            padding-bottom: 56.25%; /* Aspect ratio of 16:9 */
             overflow: hidden;
-            background-color: #000; /* Optional */
         }
 
-        /* Full-size iframe */
+        /* The iframe that takes up the full space of the container */
         #liveStream {
             position: absolute;
             top: 0;
@@ -35,25 +34,25 @@
             border: none;
         }
 
-        /* Adjust iframe size based on screen width */
+        /* Adjust iframe container based on screen size */
         @media (max-width: 768px) {
             .iframe-container {
                 width: 100%;
-                padding-bottom: 56.25%; /* Keep aspect ratio */
+                padding-bottom: 56.25%; /* Maintain 16:9 aspect ratio */
             }
         }
 
         @media (min-width: 769px) and (max-width: 1200px) {
             .iframe-container {
                 width: 80%;
-                padding-bottom: 56.25%; /* Keep aspect ratio */
+                padding-bottom: 56.25%; /* Maintain 16:9 aspect ratio */
             }
         }
 
         @media (min-width: 1201px) {
             .iframe-container {
                 width: 100%;
-                padding-bottom: 56.25%; /* Keep aspect ratio */
+                padding-bottom: 56.25%; /* Maintain 16:9 aspect ratio */
             }
         }
     </style>
