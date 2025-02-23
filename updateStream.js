@@ -17,7 +17,7 @@ function logMessage(message) {
 // Function to execute shell commands and log their output
 function runCommand(command, callback) {
     logMessage(`Running command: ${command}`);
-    exec(command, { cwd: process.cwd() }, (error, stdout, stderr) => {
+    exec(command, { cwd: "C:/Users/SPBC Streaming PC/Desktop/Github/liveStream" }, (error, stdout, stderr) => {
         if (error) {
             logMessage(`Error: ${error.message}`);
             return;
@@ -38,35 +38,25 @@ async function getLiveStreamID() {
         const page = await browser.newPage();
 
         logMessage('Opening YouTube Live page...');
-        await page.goto(CHANNEL_URL, { waitUntil: 'domcontentloaded', timeout: 60000 });
+        await page.goto(CHANNEL_URL, { waitUntil: 'load', timeout: 30000 });
 
-        // Wait for the play button to appear
-        logMessage('Waiting for play button...');
-        await page.waitForSelector('button.ytp-play-button', { timeout: 30000 });
+        // Wait for the video element to load
+        logMessage('Waiting for the canonical link...');
+        await page.waitForSelector('link[rel="canonical"]', { timeout: 10000 });
 
-        // Click the play button to start the livestream
-        logMessage('Clicking play button...');
-        await page.click('button.ytp-play-button');
-
-        // Wait for the iframe to load the actual video URL
-        logMessage('Waiting for the iframe or video elements...');
-        await page.waitForSelector('iframe[src^="https://www.youtube.com/embed/"]', { timeout: 30000 });
-
-        // Extract the iframe source (video URL)
-        const iframeSrc = await page.$eval('iframe[src^="https://www.youtube.com/embed/"]', el => el.src);
-        logMessage(`Video URL: ${iframeSrc}`);
+        // Get the video URL from the canonical link
+        const videoUrl = await page.$eval('link[rel="canonical"]', el => el.href);
+        logMessage(`Video URL: ${videoUrl}`);
 
         await browser.close();
 
-        // Extract Video ID from iframe URL
-        const videoIdMatch = iframeSrc.match(/embed\/([\w-]+)/);
+        // Extract Video ID
+        const videoIdMatch = videoUrl.match(/watch\?v=([\w-]+)/);
         return videoIdMatch ? videoIdMatch[1] : null;
     } catch (error) {
         logMessage(`Error in getLiveStreamID: ${error.message}`);
     }
 }
-
-
 
 async function updateLivestream() {
     logMessage('Fetching latest livestream...');
