@@ -40,13 +40,9 @@ async function getLiveStreamID() {
         logMessage('Opening YouTube Live page...');
         await page.goto(CHANNEL_URL, { waitUntil: 'load', timeout: 30000 });
 
-        // Wait for the canonical link to load
+        // Wait for the video element to load
         logMessage('Waiting for the canonical link...');
         await page.waitForSelector('link[rel="canonical"]', { timeout: 10000 });
-
-        // Log the page content for debugging
-        const pageContent = await page.content();
-        logMessage(`Page content: ${pageContent}`);
 
         // Get the video URL from the canonical link
         const videoUrl = await page.$eval('link[rel="canonical"]', el => el.href);
@@ -61,7 +57,6 @@ async function getLiveStreamID() {
         logMessage(`Error in getLiveStreamID: ${error.message}`);
     }
 }
-
 
 async function updateLivestream() {
     logMessage('Fetching latest livestream...');
