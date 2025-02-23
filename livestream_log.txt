@@ -1,0 +1,47 @@
+[2/23/2025, 11:19:09 AM] - Starting script...
+[2/23/2025, 11:19:09 AM] - Fetching latest livestream...
+[2/23/2025, 11:19:09 AM] - Launching Puppeteer...
+[2/23/2025, 11:19:09 AM] - Opening YouTube Live page...
+[2/23/2025, 11:19:11 AM] - Waiting for the canonical link...
+[2/23/2025, 11:19:12 AM] - Video URL: https://www.youtube.com/watch?v=G68kPZiCoo8
+[2/23/2025, 11:19:13 AM] - Latest livestream ID: G68kPZiCoo8
+[2/23/2025, 11:19:13 AM] - Writing HTML content to livestream.html
+[2/23/2025, 11:19:13 AM] - Updated livestream to Video ID: G68kPZiCoo8
+[2/23/2025, 11:19:13 AM] - Running command: git status
+[2/23/2025, 11:19:13 AM] - Command Output: On branch main
+Your branch is up to date with 'origin/main'.
+
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+	modified:   livestream.html
+
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+	livestream_log.txt
+
+no changes added to commit (use "git add" and/or "git commit -a")
+
+[2/23/2025, 11:19:13 AM] - Running command: git add --renormalize .
+[2/23/2025, 11:19:13 AM] - Command Output: 
+[2/23/2025, 11:19:13 AM] - Running command: git status
+[2/23/2025, 11:19:13 AM] - Command Output: On branch main
+Your branch is up to date with 'origin/main'.
+
+Changes to be committed:
+  (use "git restore --staged <file>..." to unstage)
+	modified:   livestream.html
+
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+	livestream_log.txt
+
+
+[2/23/2025, 11:19:13 AM] - Running command: git commit -m "Auto-update: 2/23/2025, 11:19:13 AM"
+[2/23/2025, 11:19:13 AM] - Command Output: [main c0c227e] Auto-update: 2/23/2025, 11:19:13 AM
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+[2/23/2025, 11:19:13 AM] - Running command: git push origin main
+[2/23/2025, 11:19:14 AM] - Stderr: To github.com:SPBC1909/liveStream.git
+   bf9e454..c0c227e  main -> main
+
