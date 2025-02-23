@@ -28,7 +28,7 @@ function runCommand(command, callback) {
         logMessage(`Command Output: ${stdout}`);
         if (callback) callback();
     });
-} // <-- Closing brace for runCommand function here
+}
 
 async function getLiveStreamID() {
     try {
@@ -71,9 +71,47 @@ async function updateLivestream() {
 <html>
 <head>
     <title>Livestream</title>
+    <style>
+        /* Make iframe responsive */
+        body, html {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+
+        #liveStream {
+            width: 100%;
+            height: 100%;
+            max-width: 100%;
+            max-height: 100%;
+        }
+
+        /* Adjust iframe size based on screen width */
+        @media (max-width: 768px) {
+            #liveStream {
+                width: 100%;
+                height: 50%;
+            }
+        }
+
+        @media (min-width: 769px) and (max-width: 1200px) {
+            #liveStream {
+                width: 80%;
+                height: 80%;
+            }
+        }
+
+        @media (min-width: 1201px) {
+            #liveStream {
+                width: 100%;
+                height: 100%;
+            }
+        }
+    </style>
 </head>
 <body>
-    <iframe id="liveStream" width="100%" height="100%" 
+    <iframe id="liveStream" 
         src="https://www.youtube.com/embed/${videoId}"
         frameborder="0" allowfullscreen>
     </iframe>
