@@ -18,17 +18,17 @@ function logMessage(message) {
 function runCommand(command, callback) {
     logMessage(`Running command: ${command}`);
     exec(command, { cwd: "C:/Users/SPBC Streaming PC/Desktop/Github/liveStream", shell: true }, (error, stdout, stderr) => {
-    if (error) {
-        logMessage(`Error: ${error.message}`);
-        return;
-    }
-    if (stderr) {
-        logMessage(`Stderr: ${stderr}`);
-    }
-    logMessage(`Command Output: ${stdout}`);
-    if (callback) callback();
-});
-
+        if (error) {
+            logMessage(`Error: ${error.message}`);
+            return;
+        }
+        if (stderr) {
+            logMessage(`Stderr: ${stderr}`);
+        }
+        logMessage(`Command Output: ${stdout}`);
+        if (callback) callback();
+    });
+} // <-- Closing brace for runCommand function here
 
 async function getLiveStreamID() {
     try {
