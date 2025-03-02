@@ -71,46 +71,23 @@ async function updateLivestream() {
 <html>
 <head>
     <title>Livestream</title>
-<style>
-        /* Make iframe responsive */
-        body, html {
-            height: 100%;
-            margin: 0;
-            padding: 0;
+ <style>
+        /* Make the live stream container maintain a 16:9 aspect ratio */
+        .livestream-container {
+            position: relative;
+            width: 100%;
+            height: 0;
+            padding-bottom: 56.25%; /* 16:9 aspect ratio */
             overflow: hidden;
         }
 
-        #liveStream {
+        .livestream-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
             width: 100%;
             height: 100%;
-            max-width: 100%;
-            max-height: 100%;
-              display: block;
-              margin-left: auto;
-              margin-right: auto;
-              width: 50%;
-                    }
-
-        /* Adjust iframe size based on screen width */
-        @media (max-width: 768px) {
-            #liveStream {
-                width: 100%;
-                height: 50%;
-            }
-        }
-
-        @media (min-width: 769px) and (max-width: 1200px) {
-            #liveStream {
-                width: 80%;
-                height: 80%;
-            }
-        }
-
-        @media (min-width: 1201px) {
-            #liveStream {
-                width: 100%;
-                height: 100%;
-            }
+            border: none; /* Remove iframe border */
         }
     </style>
 </head>
