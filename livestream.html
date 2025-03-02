@@ -3,40 +3,46 @@
 <head>
     <title>Livestream</title>
  <style>
-        html, body {
+        /* Make iframe responsive */
+        body, html {
+            height: 100%;
             margin: 0;
             padding: 0;
+            overflow: hidden;
+        }
+
+        #liveStream {
             width: 100%;
             height: 100%;
-        }
-        
-        #livestream-container {
-            width: 100%;
-            height: 100vh; /* Full viewport height */
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background-color: #ccc; /* Match site background */
-        }
-        
-        #livestream-frame {
-            width: 100%;
-            height: 100%;
-            max-width: 1280px;
-            max-height: 720px;
-            aspect-ratio: 16 / 9;
-            border: none;
-        }
-        
-        /* Adjust for smaller screens */
+            max-width: 100%;
+            max-height: 100%;
+              display: block;
+              margin-left: auto;
+              margin-right: auto;
+              width: 50%;
+                    }
+
+        /* Adjust iframe size based on screen width */
         @media (max-width: 768px) {
-            #livestream-frame {
+            #liveStream {
                 width: 100%;
-                height: auto;
-                aspect-ratio: 16 / 9;
+                height: 50%;
             }
         }
 
+        @media (min-width: 769px) and (max-width: 1200px) {
+            #liveStream {
+                width: 80%;
+                height: 80%;
+            }
+        }
+
+        @media (min-width: 1201px) {
+            #liveStream {
+                width: 100%;
+                height: 100vh;
+            }
+        }
     </style>
 </head>
 <body>
