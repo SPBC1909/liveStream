@@ -13,6 +13,7 @@
     height: 100%;
     background: #000;
     overflow: hidden;
+    cursor: none;
   }
   iframe {
     position: fixed;
@@ -20,36 +21,53 @@
     width: 100vw;
     height: 100vh;
     border: 0;
+    transform-origin: center center;
+  }
+  /* Invisible shield so hover and clicks never reach the player,
+     which keeps the pause/play button and title from popping up. */
+  #shield {
+    position: fixed;
+    inset: 0;
+    z-index: 10;
+    background: transparent;
   }
 </style>
 </head>
 <body>
 <script>
   // Defaults. Override with the URL, for example:
-  // video.html?v=ZHPzeXXwkZM&mute=1&loop=1
+  // video.html?v=ZHPzeXXwkZM&sound=1&zoom=1.1&loop=1
   var params = new URLSearchParams(location.search);
   var id = params.get("v") || "ZHPzeXXwkZM";
-  var mute = params.get("mute") === "1" ? 1 : 0;
+  var mute = params.get("sound") === "1" ? 0 : 1;   // muted by default
   var loop = params.get("loop") === "1";
+  var zoom = parseFloat(params.get("zoom")) || 1.15; // crops the title bar and control bar
 
   var src = "https://www.youtube.com/embed/" + encodeURIComponent(id) +
     "?autoplay=1" +
     "&controls=0" +
+    "&disablekb=1" +
+    "&fs=0" +
     "&rel=0" +
     "&modestbranding=1" +
     "&playsinline=1" +
     "&iv_load_policy=3" +
+    "&cc_load_policy=0" +
     "&mute=" + mute +
     "&origin=" + encodeURIComponent(location.origin) +
     (loop ? "&loop=1&playlist=" + encodeURIComponent(id) : "");
 
   var f = document.createElement("iframe");
   f.src = src;
-  f.allow = "autoplay; fullscreen; encrypted-media; picture-in-picture";
-  f.allowFullscreen = true;
+  f.allow = "autoplay; encrypted-media; picture-in-picture";
   f.referrerPolicy = "strict-origin-when-cross-origin";
   f.title = "YouTube video player";
+  f.style.transform = "scale(" + zoom + ")";
   document.body.appendChild(f);
+
+  var s = document.createElement("div");
+  s.id = "shield";
+  document.body.appendChild(s);
 </script>
 </body>
 </html>
