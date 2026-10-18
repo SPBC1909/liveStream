@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<title>Video</title>
+<style>
+  html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    background: #000;
+    overflow: hidden;
+  }
+  iframe {
+    position: fixed;
+    inset: 0;
+    width: 100vw;
+    height: 100vh;
+    border: 0;
+  }
+</style>
+</head>
+<body>
+<script>
+  // Defaults. Override with the URL, for example:
+  // video.html?v=ZHPzeXXwkZM&mute=1&loop=1
+  var params = new URLSearchParams(location.search);
+  var id = params.get("v") || "ZHPzeXXwkZM";
+  var mute = params.get("mute") === "1" ? 1 : 0;
+  var loop = params.get("loop") === "1";
+
+  var src = "https://www.youtube.com/embed/" + encodeURIComponent(id) +
+    "?autoplay=1" +
+    "&controls=0" +
+    "&rel=0" +
+    "&modestbranding=1" +
+    "&playsinline=1" +
+    "&iv_load_policy=3" +
+    "&mute=" + mute +
+    "&origin=" + encodeURIComponent(location.origin) +
+    (loop ? "&loop=1&playlist=" + encodeURIComponent(id) : "");
+
+  var f = document.createElement("iframe");
+  f.src = src;
+  f.allow = "autoplay; fullscreen; encrypted-media; picture-in-picture";
+  f.allowFullscreen = true;
+  f.referrerPolicy = "strict-origin-when-cross-origin";
+  f.title = "YouTube video player";
+  document.body.appendChild(f);
+</script>
+</body>
+</html>
