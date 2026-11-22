@@ -1,77 +1,80 @@
 const fs = require('fs');
+const path = require('path');
 const puppeteer = require('puppeteer');
-const { exec } = require("child_process");
+const { execSync } = require('child_process');
 
-// File to log output
-const logFile = 'livestream_log.txt';
-const CHANNEL_URL = 'https://www.youtube.com/@stonypointbaptistchurch1909/live'; 
-const HTML_FILE = 'livestream.html';
+const REPO_DIR = 'C:/Users/SPBC Streaming PC/Desktop/Github/liveStream';
+const LOG_FILE = path.join(REPO_DIR, 'livestream_log.txt');
+const HTML_FILE = path.join(REPO_DIR, 'livestream.html');
+const CHANNEL_URL = 'https://www.youtube.com/@stonypointbaptistchurch1909/live';
+const BRANCH = 'main'; // change to 'master' if that's what your repo uses
 
-// Function to log messages
-function logMessage(message) {
-    const logEntry = `[${new Date().toLocaleString()}] - ${message}\n`;
-    console.log(logEntry); // Log to console
-    fs.appendFileSync(logFile, logEntry); // Log to file
+function log(message) {
+    const entry = `[${new Date().toLocaleString()}] - ${message}`;
+    console.log(entry);
+    fs.appendFileSync(LOG_FILE, entry + '\n');
 }
 
-// Function to execute shell commands and log their output
-function runCommand(command, callback) {
-    logMessage(`Running command: ${command}`);
-    exec(command, { cwd: "C:/Users/SPBC Streaming PC/Desktop/Github/liveStream", shell: true }, (error, stdout, stderr) => {
-        if (error) {
-            logMessage(`Error: ${error.message}`);
-            return;
-        }
-        if (stderr) {
-            logMessage(`Stderr: ${stderr}`);
-        }
-        logMessage(`Command Output: ${stdout}`);
-        if (callback) callback();
-    });
+// Runs a git command and throws (with the real error text) if it fails.
+// GIT_TERMINAL_PROMPT=0 makes git fail instead of hanging forever
+// if it ever wants a username/password.
+function git(args) {
+    log(`> git ${args}`);
+    try {
+        const out = execSync(`git ${args}`, {
+            cwd: REPO_DIR,
+            encoding: 'utf8',
+            stdio: ['ignore', 'pipe', 'pipe'],
+            env: { ...process.env, GIT_TERMINAL_PROMPT: '0' },
+        });
+        if (out.trim()) log(out.trim());
+        return out;
+    } catch (err) {
+        const detail = (err.stderr || err.stdout || err.message || '').toString().trim();
+        throw new Error(`git ${args} failed (exit ${err.status}): ${detail}`);
+    }
+}
+
+function hasStagedChanges() {
+    try {
+        execSync('git diff --cached --quiet', { cwd: REPO_DIR });
+        return false; // exit 0 = nothing staged
+    } catch {
+        return true;  // exit 1 = there are staged changes
+    }
 }
 
 async function getLiveStreamID() {
+    log('Launching Puppeteer...');
+    const browser = await puppeteer.launch({ headless: true });
     try {
-        logMessage('Launching Puppeteer...');
-        const browser = await puppeteer.launch({ headless: true });
         const page = await browser.newPage();
+        log('Opening YouTube Live page...');
+        await page.goto(CHANNEL_URL, { waitUntil: 'networkidle2', timeout: 60000 });
+        log(`Landed on: ${page.url()}`);
 
-        logMessage('Opening YouTube Live page...');
-        await page.goto(CHANNEL_URL, { waitUntil: 'load', timeout: 30000 });
+        // Sometimes YouTube redirects straight to the watch page
+        let match = page.url().match(/[?&]v=([\w-]{11})/);
+        if (match) return match[1];
 
-        // Wait for the video element to load
-        logMessage('Waiting for the canonical link...');
-        await page.waitForSelector('link[rel="canonical"]', { timeout: 10000 });
+        const canonical = await page
+            .$eval('link[rel="canonical"]', el => el.href)
+            .catch(() => null);
+        log(`Canonical link: ${canonical}`);
 
-        // Get the video URL from the canonical link
-        const videoUrl = await page.$eval('link[rel="canonical"]', el => el.href);
-        logMessage(`Video URL: ${videoUrl}`);
-
+        match = canonical && canonical.match(/[?&]v=([\w-]{11})/);
+        return match ? match[1] : null;
+    } finally {
         await browser.close();
-
-        // Extract Video ID
-        const videoIdMatch = videoUrl.match(/watch\?v=([\w-]+)/);
-        return videoIdMatch ? videoIdMatch[1] : null;
-    } catch (error) {
-        logMessage(`Error in getLiveStreamID: ${error.message}`);
     }
 }
 
-async function updateLivestream() {
-    logMessage('Fetching latest livestream...');
-    const videoId = await getLiveStreamID();
-    if (!videoId) {
-        logMessage('No active livestream found.');
-        return;
-    }
-
-    logMessage(`Latest livestream ID: ${videoId}`);
-
-  let htmlContent = `<!DOCTYPE html>
+function buildHtml(videoId) {
+    return `<!DOCTYPE html>
 <html>
 <head>
     <title>Livestream</title>
- <style>
+    <style>
         /* Make the live stream container maintain a 16:9 aspect ratio */
         .livestream-container {
             position: relative;
@@ -87,47 +90,54 @@ async function updateLivestream() {
             left: 0;
             width: 100%;
             height: 100%;
-            border: none; /* Remove iframe border */
+            border: none;
         }
     </style>
 </head>
 <body>
     <div class="livestream-container">
-        <iframe id="liveStream" 
+        <iframe id="liveStream"
             src="https://www.youtube.com/embed/${videoId}"
             frameborder="0" allowfullscreen>
         </iframe>
     </div>
 </body>
-</html>`;
-
-
-    try {
-        logMessage(`Writing HTML content to ${HTML_FILE}`);
-        fs.writeFileSync(HTML_FILE, htmlContent);
-        logMessage(`Updated livestream to Video ID: ${videoId}`);
-
-        // Log git status to see the state before committing
-        runCommand('git status', () => {
-            runCommand('git add --renormalize .', () => {
-                // Log status again before commit to verify if changes are staged
-                runCommand('git status', () => {
-                    runCommand(`git commit -m "Auto-update: ${new Date().toLocaleString()}"`, () => {
-                        runCommand('git push origin main', (error, stdout, stderr) => {
-                            if (error || stderr) {
-                                logMessage('Push failed:', error || stderr);
-                            } else {
-                                logMessage('Successfully pushed to GitHub!');
-                            }
-                        });
-                    });
-                });
-            });
-        });
-    } catch (error) {
-        logMessage(`Error during updateLivestream: ${error.message}`);
-    }
+</html>
+`;
 }
 
-logMessage('Starting script...');
-updateLivestream();
+(async () => {
+    log('Starting script...');
+    try {
+        // Match GitHub exactly before doing anything, so the push can't be
+        // rejected and there's nothing to conflict. livestream.html gets
+        // rebuilt from scratch below, so no local work is lost.
+        // NOTE: this drops any unpushed local commits. Commit and push
+        // edits to this script before running it.
+        git(`fetch origin ${BRANCH}`);
+        git(`reset --keep origin/${BRANCH}`);
+
+        const videoId = await getLiveStreamID();
+        if (!videoId) {
+            log('No live or upcoming stream found. Nothing to update.');
+            return;
+        }
+        log(`Livestream ID: ${videoId}`);
+
+        fs.writeFileSync(HTML_FILE, buildHtml(videoId));
+        log(`Wrote ${HTML_FILE}`);
+
+        git('add livestream.html');
+        if (!hasStagedChanges()) {
+            log('livestream.html already has this video ID. Nothing to push.');
+            return;
+        }
+
+        git(`commit -m "Auto-update livestream: ${videoId}"`);
+        git(`push origin ${BRANCH}`);
+        log('Successfully pushed to GitHub!');
+    } catch (err) {
+        log(`FAILED: ${err.message}`);
+        process.exitCode = 1;
+    }
+})();
